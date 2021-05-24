@@ -16,10 +16,10 @@ connection = pymysql.connect(host="localhost",
 try:
     # Run a Query
     with connection.cursor() as cursor:
-        rows = [("Bob", 78, "1990-02-07 12:12:12"),
-                ("Joe", 25, "1999-08-01 17:14:30"),
-                ("Hicks", 18, "1900-04-10 01:02:03")]
-        cursor.executemany("INSERT INTO Friends VALUES (%s, %s, %s);", rows)
+        list_of_names = ['Bob','Hicks']
+        # prepare a string with the same number of placeholders as in a list_of_names
+        format_strings = ','.join(['%s']*len(list_of_names))
+        cursor.execute("DELETE FROM Friends WHERE name in ({})".format(format_strings), list_of_names)
         connection.commit()
 finally:
     # Close the connection, regardless of whether the above was successful
